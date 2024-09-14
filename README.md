@@ -13,5 +13,5 @@ Make sure to mount the volume you want to download at `/data`. After deploying t
 The following `curl` will download the ZIP file on your machine.
 
 ```bash
-curl <GENERATED_ENDPOINT>/download --header "password: <GENERATED_PASSWORD>" --output ./data.zip
+curl <GENERATED_ENDPOINT> --header "password: <GENERATED_PASSWORD>" --output ./data.zip
 ```

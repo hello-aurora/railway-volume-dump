@@ -11,7 +11,7 @@ const ZIP_FILE_NAME = `${VOLUME_NAME}.zip`;
 
 const app = express();
 
-app.get("/download", async (req, res) => {
+app.get("/", async (req, res) => {
   const password = req.headers["password"];
 
   if (!password || !process.env.PASSWORD || password !== process.env.PASSWORD) {
