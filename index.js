@@ -10,16 +10,16 @@ const ZIP_FILE_NAME = `${RAILWAY_VOLUME_NAME}.zip`;
 const app = express();
 
 app.get("/", async (req, res) => {
-  const password = req.headers["password"];
-
-  if (!password || !process.env.PASSWORD || password !== process.env.PASSWORD) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-
   if (!RAILWAY_VOLUME_MOUNT_PATH) {
     return res.status(500).json({
       error: "No volume mounted to this service, please mount a volume first.",
     });
+  }
+
+  const password = req.headers["password"];
+
+  if (!password || !process.env.PASSWORD || password !== process.env.PASSWORD) {
+    return res.status(401).json({ error: "Unauthorized" });
   }
 
   const path = join(__dirname, ZIP_FILE_NAME);
