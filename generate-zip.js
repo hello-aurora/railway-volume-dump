@@ -7,9 +7,7 @@ const generateZip = async (volumePath, path) =>
     const archive = archiver("zip");
 
     output.on("close", () => {
-      console.info(`${archive.pointer()} total bytes`);
       console.info("Zip file created successfully.");
-
       resolve(path);
     });
 
