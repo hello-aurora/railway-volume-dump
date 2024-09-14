@@ -6,7 +6,10 @@ Easily download your Railway volume data as a ZIP file.
 
 ## Prerequisites
 
-Make sure to mount the volume you want to download at `/data`. After deploying this template, copy the generated password and endpoint.
+After deploying this template, copy the generated password and endpoint.
+
+> [!NOTE]
+> The template will automatically pick up your volume path and name.
 
 ## Usage
 

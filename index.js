@@ -1,13 +1,11 @@
-const { existsSync } = require("node:fs");
 const { join } = require("node:path");
 const express = require("express");
 
 const { generateZip } = require("./generate-zip");
 
 const PORT = process.env.PORT || 3000;
-const VOLUME_NAME = "data";
-const VOLUME_PATH = `/${VOLUME_NAME}`;
-const ZIP_FILE_NAME = `${VOLUME_NAME}.zip`;
+const { RAILWAY_VOLUME_MOUNT_PATH, RAILWAY_VOLUME_NAME } = process.env;
+const ZIP_FILE_NAME = `${RAILWAY_VOLUME_NAME}.zip`;
 
 const app = express();
 
@@ -18,16 +16,14 @@ app.get("/", async (req, res) => {
     return res.status(401).json({ error: "Unauthorized" });
   }
 
-  const hasVolume = existsSync(VOLUME_PATH);
-
-  if (!hasVolume) {
-    return res
-      .status(500)
-      .json({ error: `No data found or no volume mounted at ${VOLUME_PATH}.` });
+  if (!RAILWAY_VOLUME_MOUNT_PATH) {
+    return res.status(500).json({
+      error: "No volume mounted to this service, please mount a volume first.",
+    });
   }
 
   const path = join(__dirname, ZIP_FILE_NAME);
-  const zipPath = await generateZip(VOLUME_PATH, path);
+  const zipPath = await generateZip(RAILWAY_VOLUME_MOUNT_PATH, path);
 
   return res.download(zipPath, ZIP_FILE_NAME);
 });
