@@ -47,12 +47,6 @@ func download(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	//// TEMP
-	// os.Setenv("RAILWAY_VOLUME_MOUNT_PATH", "./test-data")
-	// os.Setenv("RAILWAY_VOLUME_NAME", "test-data")
-	// os.Setenv("PASSWORD", "temp")
-	//// TEMP
-
 	http.HandleFunc("/", download)
 
 	port := os.Getenv("PORT")
