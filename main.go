@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -61,8 +62,5 @@ func main() {
 
 	fmt.Printf("Server running at http://localhost:%s\n", port)
 
-	httpErr := http.ListenAndServe(":" + port, nil)
-	if httpErr != nil {
-		_ = fmt.Errorf("failed to start server: %v", httpErr)
-	}
+	log.Fatal(http.ListenAndServe(":" + port, nil))
 }
