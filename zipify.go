@@ -44,6 +44,13 @@ func zipify(volumePath, outputPath string) error {
 		}
 
 		if info.IsDir() {
+			relPath += "/"
+
+			_, err := zipWriter.Create(relPath)
+			if err != nil {
+				return fmt.Errorf("could not create directory in zip: %v", err)
+			}
+
 			return nil
 		}
 
