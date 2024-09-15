@@ -1,19 +1,17 @@
-FROM node:20-alpine AS builder
+FROM golang:1.23.1-alpine AS builder
 
 WORKDIR /app
 COPY . .
 
-RUN yarn install --production --prefer-offline --frozen-lockfile
-RUN yarn autoclean --force
+RUN go mod init railway-volume-dump && \
+    go mod tidy && \
+    go build -o railway-volume-dump .
 
-FROM node:20-alpine AS runner
+FROM alpine:3.20
 
 WORKDIR /app
 ENV NODE_ENV=production
 
-COPY --from=builder /app/package.json ./
-COPY --from=builder /app/index.js ./
-COPY --from=builder /app/generate-zip.js ./
-COPY --from=builder /app/node_modules/ ./node_modules/
+COPY --from=builder /app/railway-volume-dump .
 
-ENTRYPOINT ["node", "index.js"]
+ENTRYPOINT ["/app/railway-volume-dump"]
