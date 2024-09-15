@@ -85,5 +85,7 @@ func zipify(volumePath, outputPath string) error {
 		return fmt.Errorf("could not finalize zip file: %v", outFileErr)
 	}
 
+	fmt.Println("\nZip file created successfully")
+
 	return nil
 }
