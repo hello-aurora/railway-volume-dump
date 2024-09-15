@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"runtime"
 )
 
 func download(w http.ResponseWriter, r *http.Request) {
@@ -44,6 +45,13 @@ func download(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/zip")
 
 	http.ServeFile(w, r, zipPath)
+
+	if err := os.Remove(zipPath); err != nil {
+		fmt.Printf("error deleting zip file: %v\n", err)
+		return
+	}
+
+	runtime.GC()
 }
 
 func main() {

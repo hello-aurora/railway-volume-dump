@@ -64,7 +64,6 @@ func zipify(volumePath, outputPath string) error {
 		if err != nil {
 			return fmt.Errorf("could not create zip header: %v", err)
 		}
-
 		zipHeader.Name = relPath
 
 		writer, err := zipWriter.CreateHeader(zipHeader)
