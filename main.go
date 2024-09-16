@@ -38,7 +38,7 @@ func download(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Volume name: %s\n", volumeName)
 	fmt.Printf("Archive path: %s\n", archivePath)
 
-	fileErr := zipify(mountPath, archivePath)
+	fileErr := compress(mountPath, archivePath)
 	if fileErr != nil {
 		http.Error(w, fileErr.Error(), http.StatusInternalServerError)
 	}

@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 )
 
-func zipify(volumePath, outputPath string) error {
+func compress(volumePath, outputPath string) error {
 	outFile, outFileErr := os.Create(outputPath)
 	if outFileErr != nil {
 		return fmt.Errorf("could not create zip file: %v", outFileErr)
