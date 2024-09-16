@@ -4,17 +4,16 @@
 
 Easily download your Railway volume data as a ZIP file.
 
-## Prerequisites
-
-After deploying this template, copy the generated password and endpoint.
-
-> [!NOTE]
-> The template will automatically pick up your volume path and name.
-
 ## Usage
 
-The following `curl` will download the ZIP file on your machine.
+The following `curl` will download the ZIP file on your machine, replace `<GENERATED_ENDPOINT>` and `<GENERATED_PASSWORD>` with the generated when deploying the template.
 
 ```bash
-curl -sLD - -JO <GENERATED_ENDPOINT> -H "password: <GENERATED_PASSWORD>"
+curl -OJ <GENERATED_ENDPOINT> -H "password: <GENERATED_PASSWORD>"
 ```
+
+## Notes
+
+- The template will automatically pick up your volume path and name.
+- Downloading will occur egress fees.
+- It might takes some time to compress the volume data, you can check the service logs for progress.
