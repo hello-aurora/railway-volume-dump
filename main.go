@@ -6,8 +6,10 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"runtime"
 )
+
+var archiveExtension = "zip"
+var archiveMimeType = "application/zip"
 
 func download(w http.ResponseWriter, r *http.Request) {
 	mountPath := os.Getenv("RAILWAY_VOLUME_MOUNT_PATH")
@@ -29,29 +31,27 @@ func download(w http.ResponseWriter, r *http.Request) {
 	}
 
 	volumeName := os.Getenv("RAILWAY_VOLUME_NAME")
-	fileName := fmt.Sprintf("%s.zip", volumeName)
-	zipPath := filepath.Join(dir, fileName)
+	fileName := fmt.Sprintf("%s.%s", volumeName, archiveExtension)
+	archivePath := filepath.Join(dir, fileName)
 
 	fmt.Printf("Volume path: %s\n", mountPath)
 	fmt.Printf("Volume name: %s\n", volumeName)
-	fmt.Printf("Zip path: %s\n", zipPath)
+	fmt.Printf("Archive path: %s\n", archivePath)
 
-	fileErr := zipify(mountPath, zipPath)
+	fileErr := zipify(mountPath, archivePath)
 	if fileErr != nil {
 		http.Error(w, fileErr.Error(), http.StatusInternalServerError)
 	}
 
 	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=%s", fileName))
-	w.Header().Set("Content-Type", "application/zip")
+	w.Header().Set("Content-Type", archiveMimeType)
 
-	http.ServeFile(w, r, zipPath)
+	http.ServeFile(w, r, archivePath)
 
-	if err := os.Remove(zipPath); err != nil {
+	if err := os.Remove(archivePath); err != nil {
 		fmt.Printf("error deleting zip file: %v\n", err)
 		return
 	}
-
-	runtime.GC()
 }
 
 func main() {
