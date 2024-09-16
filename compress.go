@@ -9,14 +9,8 @@ import (
 	"github.com/klauspost/compress/zip"
 )
 
-func compress(volumePath, outputPath string) error {
-	outFile, outFileErr := os.Create(outputPath)
-	if outFileErr != nil {
-		return fmt.Errorf("could not create zip file: %v", outFileErr)
-	}
-	defer outFile.Close()
-
-	zipWriter := zip.NewWriter(outFile)
+func compress(volumePath string, w io.Writer) error {
+	zipWriter := zip.NewWriter(w)
 	defer zipWriter.Close()
 
 	totalFiles := 0
@@ -34,7 +28,7 @@ func compress(volumePath, outputPath string) error {
 		return nil
 	})
 
-	outFileErr = filepath.Walk(volumePath, func(path string, info os.FileInfo, err error) error {
+	walkErr := filepath.Walk(volumePath, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
@@ -49,7 +43,7 @@ func compress(volumePath, outputPath string) error {
 
 			_, err := zipWriter.Create(relPath)
 			if err != nil {
-				return fmt.Errorf("could not create directory in zip: %v", err)
+				return fmt.Errorf("could not create directory in ZIP: %v", err)
 			}
 
 			return nil
@@ -63,14 +57,14 @@ func compress(volumePath, outputPath string) error {
 
 		zipHeader, err := zip.FileInfoHeader(info)
 		if err != nil {
-			return fmt.Errorf("could not create zip header: %v", err)
+			return fmt.Errorf("could not create ZIP header: %v", err)
 		}
 		zipHeader.Name = relPath
 		zipHeader.Method = zip.Deflate
 
 		writer, err := zipWriter.CreateHeader(zipHeader)
 		if err != nil {
-			return fmt.Errorf("could not create zip writer: %v", err)
+			return fmt.Errorf("could not create ZIP writer: %v", err)
 		}
 
 		_, err = io.Copy(writer, file)
@@ -84,16 +78,11 @@ func compress(volumePath, outputPath string) error {
 		return nil
 	})
 
-	if outFileErr != nil {
-		return fmt.Errorf("error walking the file tree: %v", outFileErr)
+	if walkErr != nil {
+		return fmt.Errorf("error walking the file tree: %v", walkErr)
 	}
 
-	outFileErr = zipWriter.Close()
-	if outFileErr != nil {
-		return fmt.Errorf("could not finalize zip file: %v", outFileErr)
-	}
-
-	fmt.Println("\nZip file created successfully")
+	fmt.Println("\nZIP file streamed successfully")
 
 	return nil
 }
