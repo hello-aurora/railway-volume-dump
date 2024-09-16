@@ -1,11 +1,12 @@
 package main
 
 import (
-	"archive/zip"
 	"fmt"
 	"io"
 	"os"
 	"path/filepath"
+
+	"github.com/klauspost/compress/zip"
 )
 
 func compress(volumePath, outputPath string) error {
@@ -65,6 +66,7 @@ func compress(volumePath, outputPath string) error {
 			return fmt.Errorf("could not create zip header: %v", err)
 		}
 		zipHeader.Name = relPath
+		zipHeader.Method = zip.Deflate
 
 		writer, err := zipWriter.CreateHeader(zipHeader)
 		if err != nil {
