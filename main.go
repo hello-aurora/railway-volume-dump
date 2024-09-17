@@ -7,8 +7,8 @@ import (
 	"os"
 )
 
-var archiveExtension = "zip"
-var archiveMimeType = "application/zip"
+var archiveExtension = "tar.gz"
+var archiveMimeType = "application/gzip"
 
 func download(w http.ResponseWriter, r *http.Request) {
 	mountPath := os.Getenv("RAILWAY_VOLUME_MOUNT_PATH")
